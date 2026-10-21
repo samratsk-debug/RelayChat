@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8080/api',
+  apiBaseUrl: 'https://relaychat-5jzc.onrender.com/api',
 };
