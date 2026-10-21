@@ -1,0 +1,19 @@
+# Java / Maven
+**/target/
+*.class
+
+# Angular
+**/node_modules/
+**/dist/
+**/.angular/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Secrets
+.env
+.env.*
+**/secret.yml
+**/secrets.yml

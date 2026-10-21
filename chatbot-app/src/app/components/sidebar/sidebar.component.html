@@ -1,0 +1,113 @@
+<ng-template #sessionRow let-session>
+  <div
+    class="session"
+    [class.session--active]="session.id === chat.activeSessionId()"
+    (mouseleave)="clearDeleteConfirm()"
+  >
+    @if (editingId() === session.id) {
+      <input
+        class="rename"
+        type="text"
+        maxlength="100"
+        appAutofocus
+        [(ngModel)]="editValue"
+        (keydown.enter)="commitRename(session)"
+        (keydown.escape)="cancelRename()"
+        (blur)="commitRename(session)"
+        aria-label="Chat name"
+      />
+    } @else {
+      <button class="session-main" type="button" (click)="chat.selectSession(session.id)">
+        @if (session.pinned) {
+          <svg class="pin-mark" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 17v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M9 3h6l-1 7 3 3v2H7v-2l3-3-1-7z" />
+          </svg>
+        }
+        <span class="session-title">{{ session.title }}</span>
+      </button>
+
+      <div class="actions">
+        <button
+          class="icon-btn"
+          type="button"
+          [appTooltip]="session.pinned ? 'Unpin chat' : 'Pin chat'"
+          [attr.aria-label]="session.pinned ? 'Unpin chat' : 'Pin chat'"
+          (click)="togglePin(session, $event)"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 17v5" />
+            <path d="M9 3h6l-1 7 3 3v2H7v-2l3-3-1-7z" />
+          </svg>
+        </button>
+
+        <button
+          class="icon-btn"
+          type="button"
+          appTooltip="Rename chat"
+          aria-label="Rename chat"
+          (click)="startRename(session, $event)"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+          </svg>
+        </button>
+
+        <button
+          class="icon-btn"
+          [class.icon-btn--danger]="confirmDeleteId() === session.id"
+          type="button"
+          [appTooltip]="confirmDeleteId() === session.id ? 'Click again to confirm' : 'Delete chat'"
+          [attr.aria-label]="confirmDeleteId() === session.id ? 'Confirm delete' : 'Delete chat'"
+          (click)="requestDelete(session, $event)"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+</ng-template>
+
+<aside class="sidebar">
+  <div class="brand">
+    <h1>Relay</h1>
+  </div>
+
+  <button class="new-session" type="button" (click)="chat.newSession()">
+    <span class="plus">+</span> New session
+  </button>
+
+  <nav class="sessions">
+    @if (pinnedSessions().length > 0) {
+      <div class="section-label">Pinned</div>
+      @for (s of pinnedSessions(); track s.id) {
+        <ng-container *ngTemplateOutlet="sessionRow; context: { $implicit: s }"></ng-container>
+      }
+      @if (recentSessions().length > 0) {
+        <div class="section-label">Recent</div>
+      }
+    }
+
+    @for (s of recentSessions(); track s.id) {
+      <ng-container *ngTemplateOutlet="sessionRow; context: { $implicit: s }"></ng-container>
+    }
+  </nav>
+
+  <div class="account">
+    <div class="avatar">{{ (auth.displayName() || '?')[0] | uppercase }}</div>
+    <span class="account-name" [appTooltip]="auth.email() ?? ''">{{ auth.displayName() }}</span>
+    <button class="logout" type="button" appTooltip="Log out" aria-label="Log out" (click)="logout()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+    </button>
+  </div>
+</aside>

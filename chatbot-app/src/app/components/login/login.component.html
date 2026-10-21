@@ -1,0 +1,78 @@
+<div class="screen">
+  <div class="card">
+    <h1 class="wordmark">Relay</h1>
+    <p class="tagline">
+      {{ mode() === 'login' ? "Pick up where your last session left off." : "Create an account to get started." }}
+    </p>
+
+    <form (ngSubmit)="submit()">
+      @if (mode() === 'login') {
+        <label class="field-label" for="identifier">Email or username</label>
+        <input
+          id="identifier"
+          class="field"
+          type="text"
+          placeholder="you@example.com or your username"
+          [(ngModel)]="identifier"
+          name="identifier"
+          autocomplete="username"
+          required
+        />
+      } @else {
+        <label class="field-label" for="email">Email</label>
+        <input
+          id="email"
+          class="field"
+          type="email"
+          placeholder="you@example.com"
+          [(ngModel)]="email"
+          name="email"
+          autocomplete="email"
+          required
+        />
+
+        <label class="field-label" for="username">Username</label>
+        <input
+          id="username"
+          class="field"
+          type="text"
+          placeholder="pick a username"
+          [(ngModel)]="username"
+          name="username"
+          maxlength="20"
+          autocomplete="off"
+          required
+        />
+        <p class="hint">3 to 20 characters: letters, numbers or underscores.</p>
+      }
+
+      <label class="field-label" for="password">Password</label>
+      <input
+        id="password"
+        class="field"
+        type="password"
+        placeholder="••••••••"
+        [(ngModel)]="password"
+        name="password"
+        [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
+        required
+      />
+
+      @if (errorMessage()) {
+        <p class="error">{{ errorMessage() }}</p>
+      }
+
+      <button class="continue" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Please wait...' : (mode() === 'login' ? 'Continue' : 'Create account') }}
+      </button>
+    </form>
+
+    <p class="switch">
+      @if (mode() === 'login') {
+        Don't have an account? <a href="javascript:void(0)" (click)="toggleMode()">Sign up</a>
+      } @else {
+        Already have an account? <a href="javascript:void(0)" (click)="toggleMode()">Log in</a>
+      }
+    </p>
+  </div>
+</div>

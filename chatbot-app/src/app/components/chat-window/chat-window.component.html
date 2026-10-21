@@ -1,0 +1,29 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="main">
+    <header class="header">
+      <h2>{{ session()?.title || 'New session' }}</h2>
+    </header>
+
+    @if (chat.errorMessage()) {
+      <div class="error-banner">{{ chat.errorMessage() }}</div>
+    }
+
+    <section class="messages">
+      @if (chat.isLoadingSessions()) {
+        <p class="loading">Loading your sessions...</p>
+      }
+
+      @for (message of chat.messages(); track message.id) {
+        <app-message-bubble [message]="message"></app-message-bubble>
+      }
+
+      <div #scrollAnchor></div>
+    </section>
+
+    <footer class="footer">
+      <app-chat-input [disabled]="chat.isAssistantTyping()" (send)="onSend($event)"></app-chat-input>
+    </footer>
+  </main>
+</div>

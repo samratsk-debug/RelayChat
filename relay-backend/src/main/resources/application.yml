@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    # Local secrets live in this git-ignored file (copy secrets.example.yml to
+    # secrets.yml). In production, set the environment variables named below instead.
+    import: optional:classpath:secrets.yml
+  mvc:
+    async:
+      request-timeout: 120000   # 2 minutes; the default 30s is too short for long streamed answers
+  datasource:
+    url: "${DB_URL:jdbc:postgresql://localhost:5432/relay_chat}"
+    username: "${DB_USERNAME:postgres}"
+    password: "${DB_PASSWORD:}"
+  jpa:
+    hibernate:
+      ddl-auto: update   # fine for learning/dev; switch to 'validate' + migrations later
+    show-sql: false      # set to true to see every SQL statement in the console
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  jwt:
+    secret: "${JWT_SECRET:}"        # 32+ random characters; the app refuses to start without it
+    expiration-ms: 86400000         # 24 hours
+  gemini:
+    api-key: "${GEMINI_API_KEY:}"   # from aistudio.google.com/apikey
+    model: "${GEMINI_MODEL:gemini-3.1-flash-lite}"   # see README before changing
+  assistant:
+    # The assistant's persona. Edit freely; restart the backend to apply.
+    # Today's date is added automatically. Leave empty for no system prompt.
+    system-prompt: >-
+      You are Relay, a friendly and concise AI assistant inside the Relay chat app,
+      a learning project. If asked your name, say you are Relay. If asked what powers
+      you, say you run on Google's Gemini. Format answers in Markdown when it helps
+      (short lists, bold key terms, fenced code blocks for code), but keep simple
+      answers short. You can't browse the web, so don't claim to look things up live.
+      If you don't know something, say so instead of guessing.

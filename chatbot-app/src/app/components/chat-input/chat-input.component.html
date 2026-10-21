@@ -1,0 +1,23 @@
+<div class="input-bar">
+  <textarea
+    class="field"
+    rows="1"
+    placeholder="Message Relay..."
+    [(ngModel)]="value"
+    (keydown)="onKeydown($event)"
+    [disabled]="disabled"
+  ></textarea>
+  <!-- aria-disabled (not the disabled attribute) so the tooltip still shows when it's greyed out -->
+  <button
+    class="send"
+    type="button"
+    appTooltip="Send message"
+    aria-label="Send message"
+    [attr.aria-disabled]="disabled || !value.trim()"
+    (click)="submit()"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M4 12L20 4L14 20L11 13L4 12Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
+    </svg>
+  </button>
+</div>

@@ -1,0 +1,12 @@
+<div class="row" [class.row--user]="message.role === 'user'">
+  <div class="bubble" [class.bubble--user]="message.role === 'user'">
+    @if (message.pending && !message.content) {
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+    } @else {
+      <div class="content" [innerHTML]="renderedContent()"></div>
+      <span class="time">{{ message.timestamp | date: 'shortTime' }}</span>
+    }
+  </div>
+</div>
